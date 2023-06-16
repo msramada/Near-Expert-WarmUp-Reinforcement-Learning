@@ -70,11 +70,11 @@ class ppo(object):
             deltas = deltas.detach()
             Advantages = torch.zeros(horizon_length, rollouts)
             Advantages[-1,:] = deltas[time_step_k == max_time]
-            for j in reversed(range(horizon_length)):
-                indices = (time_step_k == j).squeeze()
-                ratios_mat[j,:] = ratios[indices,0]
-                Vals[j,:] = (self.Value.forward(states[indices,:])).squeeze()
-                Vals_next[j,:] = rewards[indices,0] + self.gamma * (self.Value.forward(next_states[indices,:])).squeeze()
+            ratios_mat = ratios
+            Vals = self.Value.forward(states)
+            Vals_next = rewards + self.gamma * self.Value.forward(next_states)
+            for j in reversed(range(horizon_length-1)):
+                indices = (time_step_k == j).squeeze()   
                 if j < horizon_length-2:
                     Advantages[j,:] = deltas[indices,0] + gamma_lambda * Advantages[j+1,:]
             #Advantages = rtgs - Vals.detach()
