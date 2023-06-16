@@ -1,5 +1,6 @@
 # Near-Expert-WarmUp-Reinforcement-Learning
 Reinforcement learning algorithm initialized by supervised learning of a nearly expert agent.
+The expert agent is based the principle of optimal control of certainty equivalence model (probably reduced complexity model: linearization or reduction).
 
 # Contents:
 ## ExampleModels:
