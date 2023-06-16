@@ -65,6 +65,7 @@ class ddpg(object):
         self.Actor_optim = torch.optim.Adam(self.Actor.parameters(), self.actor_lr)
         predicted_inputs = self.Actor(states)
         loss = torch.nn.functional.mse_loss(predicted_inputs, target_inputs)
+        print(loss.detach())
         self.Actor.train()
         self.Actor_optim.zero_grad()
         loss.backward()
