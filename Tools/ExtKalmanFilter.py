@@ -48,5 +48,6 @@ class Extended_KF:
         self.Covariance = torch.atleast_2d(cov_new)
 
     def printem(self):
-        print('x_{k|k}= ', self.Mean, '\Sigma_{k|k}= ', self.Covariance)
+        print('x_{k|k}= ', self.Mean)
+        print('\Sigma_{k|k}= ', self.Covariance)
         

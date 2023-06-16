@@ -8,7 +8,7 @@ torch.set_default_dtype(torch.float64)
 class ddpg(object):
     def __init__(self, rx, ru, hidden_dim,
                   critic_lr, actor_lr, buffer_size, tau, gamma, device):
-        self.Buffer = ReplayBuffer(buffer_size, device)
+        self.ReplayBuffer = ReplayBuffer(buffer_size, device)
         self.device = device
         self.Critic = Critic_NN(rx+ru, hidden_dim, 1).to(device)
         self.Critic_target = Critic_NN(rx+ru, hidden_dim, 1).to(device)
@@ -33,7 +33,7 @@ class ddpg(object):
     
     def train_critic(self, batch_size):
         self.Critic_optim = torch.optim.Adam(self.Critic.parameters(), self.critic_lr)
-        states, actions, rewards, next_states = self.Buffer.sample(batch_size)
+        states, actions, rewards, next_states = self.ReplayBuffer.sample(batch_size)
         Q_now = self.Critic.forward(states, actions)
         next_actions = self.Actor_target.forward(next_states)
         Q_next = self.Critic_target.forward(next_states, next_actions.detach())
@@ -50,7 +50,7 @@ class ddpg(object):
 
     def train_actor(self, batch_size):
         self.Actor_optim = torch.optim.Adam(self.Actor.parameters(), self.actor_lr)
-        states, _, _, _ = self.Buffer.sample(batch_size)
+        states, _, _, _ = self.ReplayBuffer.sample(batch_size)
         loss = - self.Critic.forward(states, self.Actor(states)).mean()
         self.Actor.train()
         self.Actor_optim.zero_grad()
